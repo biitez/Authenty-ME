@@ -14,6 +14,9 @@ Very secure and free (Authentication/Licensing) system for .NET
 4. I have a question, suggestion or criticism, where should I send it?
    - You can send it through our direct contact (https://authenty.me/support) or enter our discord server (https://discord.gg/UmJbzMd)
 
+5. What makes Authenty different from others?
+   - What makes Authenty different from others is quite a few things, one of the most important of which is ***safety***. We use an incredibly powerful data encryption, which    would not require traffic to be sent through an insecure channel since it would not be possible for an attacker to understand the messages sent between the client and the server side (obviously, authorized recipients could do so). However, in our library or class, requests are sent through a secure channel and attackers will not even be able to see the encrypted message :).
+   
 ### Some features:
 - [x] Data is secured under **highly advanced encryption**
 - [x] Encrypted SSL traffic
