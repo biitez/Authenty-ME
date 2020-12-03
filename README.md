@@ -24,6 +24,7 @@ Very secure and free (Authentication/Licensing) system for .NET
 - [x] Secure server-side variable control
 - [x] Limit 1 PC per license
 - [x] Advanced HWID control
+- [x] Log System
 - [x] Multiple managers / operators for your application with customized permissions
 - [x] Many easy to use and understand APIs
 - [x] Full control of users (change password, email, ban them from your application)
@@ -113,7 +114,7 @@ if (exampleApp.Register(username, password, license))
 ```
 
 ## 3. Mode: Only with license
-```charp
+```csharp
 Console.Write(" License: ");
 string license = Console.ReadLine();
 
@@ -155,9 +156,11 @@ exampleApp.Log("Logged in!"); // return bool
 ```
 
 ## 7. APIs & Extra
-- The documentation of the APIs can be found in our [documentacion completa](https://docs.authenty.me) 
+- The documentation of the APIs can be found in our [complete documentation](https://docs.authenty.me) 
 
 
-WEB Page: https://authenty.me/
-DOCS Page: https://docs.authenty.me/
+Web Page: https://authenty.me/
+
+Documentation Page: https://docs.authenty.me/
+
 Owner discord: biitez#1717 (quick answers)
