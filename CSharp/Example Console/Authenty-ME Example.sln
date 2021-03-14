@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30907.101
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Authenty-ME Example", "Authenty-ME Example\Authenty-ME Example.csproj", "{30E7841C-A7D7-40ED-9D43-3A6043333E59}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{30E7841C-A7D7-40ED-9D43-3A6043333E59}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{30E7841C-A7D7-40ED-9D43-3A6043333E59}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{30E7841C-A7D7-40ED-9D43-3A6043333E59}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{30E7841C-A7D7-40ED-9D43-3A6043333E59}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {7A2AE099-D762-4219-B5BD-DCA9232FBDB5}
+	EndGlobalSection
+EndGlobal
