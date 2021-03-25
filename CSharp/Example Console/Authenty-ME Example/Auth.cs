@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -7,7 +7,6 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Security;
 using System.Runtime.InteropServices;
-using System.Runtime.Serialization.Json;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
@@ -15,6 +14,7 @@ using System.Threading;
 using System.Security.Authentication;
 using System.Diagnostics;
 using System.Reflection;
+using Newtonsoft.Json;
 
 namespace Authenty
 {
@@ -56,7 +56,11 @@ namespace Authenty
         private readonly Dictionary<string, string> _remoteVariables = new Dictionary<string, string>();
         internal static (bool success, string authorizationKey, string AppKey) CommunicationEstablished = (false, null, null);
 
-        public Licensing(AppSettings applicationSettings) => _applicationSettings = applicationSettings;
+        public Licensing(AppSettings applicationSettings)
+        {
+            _applicationSettings = applicationSettings;
+        }
+
         public Licensing Connect()
         {
             WebRequest.DefaultWebProxy = new WebProxy();
@@ -70,7 +74,7 @@ namespace Authenty
             _HWIDEngine = new HWIDEngine();
             _aesCryptography = new AesCryptography();
             _requestController = new RequestController();
-                
+
             var connectionRequest = _requestController.Post(new Dictionary<string, string>()
             {
                 // Asymmetrically encrypted keys (They can only be decrypted using the private RSA key of your application, which is stored securely on our servers)
@@ -90,7 +94,7 @@ namespace Authenty
                 case HttpStatusCode.OK:
 
                     var initializeResponse =
-                        JsonControl.Deserialize<GeneralResponses>(_aesCryptography.Decrypt(connectionRequest.Content.ReadAsStringAsync().Result));
+                        JsonConvert.DeserializeObject<GeneralResponses>(_aesCryptography.Decrypt(connectionRequest.Content.ReadAsStringAsync().Result));
 
                     if (!initializeResponse.ApplicationEnabled)
                         throw new ApplicationException(_errorCustomMessages["APP_PAUSED"]);
@@ -102,11 +106,11 @@ namespace Authenty
                     return this;
 
                 case HttpStatusCode.Unauthorized: throw new WebException(_errorCustomMessages["FILTERS_DETECTION"]);
-                case HttpStatusCode.Forbidden: throw new WebException("This application has been banned for violating the Authenty.ME TOS, for more information, contact a support.");                
+                case HttpStatusCode.Forbidden: throw new WebException("This application has been banned for violating the Authenty.ME TOS, for more information, contact a support.");
                 case HttpStatusCode.NotFound: throw new WebException("This application could not be found");
 
                 default: throw new WebException("An unexpected error has occurred, contact support if this continues.");
-            }          
+            }
         }
 
         /// <summary>
@@ -123,7 +127,7 @@ namespace Authenty
             var loginReq = _requestController.Post(new Dictionary<string, string>()
             {
                 { "type", "login" },
-                { "data", _aesCryptography.Encrypt(JsonControl.Serialize(new LoginInfo
+                { "data", _aesCryptography.Encrypt(JsonConvert.SerializeObject(new LoginInfo
                     {
                         username = username,
                         password = password
@@ -131,7 +135,7 @@ namespace Authenty
                 }
             });
 
-            var loginResponse = JsonControl.Deserialize<GeneralResponses>(_aesCryptography.Decrypt(loginReq.Content.ReadAsStringAsync().Result));
+            var loginResponse = JsonConvert.DeserializeObject<GeneralResponses>(_aesCryptography.Decrypt(loginReq.Content.ReadAsStringAsync().Result));
 
             if (!loginResponse.success)
             {
@@ -190,7 +194,7 @@ namespace Authenty
             var registerReq = _requestController.Post(new Dictionary<string, string>()
             {
                 { "type", "register" },
-                { "data", _aesCryptography.Encrypt(JsonControl.Serialize(new RegisterInfo
+                { "data", _aesCryptography.Encrypt(JsonConvert.SerializeObject(new RegisterInfo
                     {
                         username = username,
                         password = password,
@@ -200,7 +204,7 @@ namespace Authenty
                 }
             });
 
-            var registerResponse = JsonControl.Deserialize<GeneralResponses>(_aesCryptography.Decrypt(registerReq.Content.ReadAsStringAsync().Result));
+            var registerResponse = JsonConvert.DeserializeObject<GeneralResponses>(_aesCryptography.Decrypt(registerReq.Content.ReadAsStringAsync().Result));
 
             if (!registerResponse.success)
             {
@@ -255,7 +259,7 @@ namespace Authenty
             var extendSubReq = _requestController.Post(new Dictionary<string, string>()
             {
                 { "type", "extendSubscription" },
-                { "data", _aesCryptography.Encrypt(JsonControl.Serialize(new ExtendSubscriptionInfo
+                { "data", _aesCryptography.Encrypt(JsonConvert.SerializeObject(new ExtendSubscriptionInfo
                     {
                         username = username,
                         password = password,
@@ -264,7 +268,7 @@ namespace Authenty
                 }
             });
 
-            var extendSubResponse = JsonControl.Deserialize<GeneralResponses>(_aesCryptography.Decrypt(extendSubReq.Content.ReadAsStringAsync().Result));
+            var extendSubResponse = JsonConvert.DeserializeObject<GeneralResponses>(_aesCryptography.Decrypt(extendSubReq.Content.ReadAsStringAsync().Result));
 
             if (!extendSubResponse.success)
             {
@@ -273,7 +277,7 @@ namespace Authenty
 
                 Thread.Sleep(Timeout.Infinite);
             }
-            
+
             return true;
         }
 
@@ -290,10 +294,10 @@ namespace Authenty
             var licenseLoginReq = _requestController.Post(new Dictionary<string, string>()
             {
                 { "type", "licenseLogin" },
-                { "data", _aesCryptography.Encrypt(JsonControl.Serialize(new LicenseLoginInfo { license = license })) }
+                { "data", _aesCryptography.Encrypt(JsonConvert.SerializeObject(new LicenseLoginInfo { license = license })) }
             });
 
-            var licenseLoginResponse = JsonControl.Deserialize<GeneralResponses>(_aesCryptography.Decrypt(licenseLoginReq.Content.ReadAsStringAsync().Result));
+            var licenseLoginResponse = JsonConvert.DeserializeObject<GeneralResponses>(_aesCryptography.Decrypt(licenseLoginReq.Content.ReadAsStringAsync().Result));
 
             if (!licenseLoginResponse.success)
             {
@@ -353,10 +357,10 @@ namespace Authenty
             var variableReq = _requestController.Post(new Dictionary<string, string>()
             {
                 { "type", "variable" },
-                { "data", _aesCryptography.Encrypt(JsonControl.Serialize(new VariableInfo { SecretCode = variableCode })) }
+                { "data", _aesCryptography.Encrypt(JsonConvert.SerializeObject(new VariableInfo { SecretCode = variableCode })) }
             });
 
-            var variableResponse = JsonControl.Deserialize<GeneralResponses>(_aesCryptography.Decrypt(variableReq.Content.ReadAsStringAsync().Result));
+            var variableResponse = JsonConvert.DeserializeObject<GeneralResponses>(_aesCryptography.Decrypt(variableReq.Content.ReadAsStringAsync().Result));
 
             if (!variableResponse.success)
                 throw new Exception(_errorCustomMessages[variableResponse.errorCode]);
@@ -493,7 +497,11 @@ namespace Authenty
     public class RequestController
     {
         private readonly CookieContainer _cookieContainer;
-        public RequestController() => _cookieContainer = new CookieContainer();
+
+        public RequestController() 
+        {
+            _cookieContainer = new CookieContainer();
+        }
 
         public HttpResponseMessage Post(Dictionary<string, string> info, Dictionary<string, string> headers = null)
         {
@@ -629,8 +637,8 @@ namespace Authenty
 
         public byte[] Encrypt(byte[] message)
         {
-            var publicprovider = (RSACryptoServiceProvider)_rsaPubKey.PublicKey.Key;
-            return publicprovider.Encrypt(message, false);
+            var publicprovider = (RSA)_rsaPubKey.PublicKey.Key;
+            return publicprovider.Encrypt(message, RSAEncryptionPadding.Pkcs1);
         }
     }
 
@@ -647,45 +655,6 @@ namespace Authenty
         }
     }
 
-    public class JsonControl
-    {
-
-        /// <summary>
-        /// Deserialize an from json string
-        /// </summary>
-        public static T Deserialize<T>(string body)
-        {
-            try
-            {
-                using (var stream = new MemoryStream())
-                using (var writer = new StreamWriter(stream))
-                {
-                    writer.Write(body);
-                    writer.Flush();
-                    stream.Position = 0;
-                    return (T)new DataContractJsonSerializer(typeof(T)).ReadObject(stream);
-                }
-            }
-            catch { throw new Exception("An error occurred in the deserialization of the JSON!"); }
-        }
-
-        /// <summary>
-        /// Serialize an object to json
-        /// </summary>
-        public static string Serialize<T>(T item)
-        {
-            try
-            {
-                using (MemoryStream ms = new MemoryStream())
-                {
-                    new DataContractJsonSerializer(typeof(T)).WriteObject(ms, item);
-                    return Encoding.Default.GetString(ms.ToArray());
-                }
-            }
-            catch { throw new Exception("An error occurred in the serialization of the JSON!"); }
-        }
-    }
-    
     public class HWIDEngine
     {
         public HWIDEngine() => ID = DiskID() + CPUID() + WindowsID();
