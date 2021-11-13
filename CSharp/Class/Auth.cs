@@ -426,7 +426,7 @@ namespace Authenty
         public string email { get; set; } = null;
         public string username { get; set; } = null;
         public string expiredate { get; set; } = null;
-        public int level { get; set; } = 1;
+        public int? level { get; set; } = 1;
         public string hwid { get; set; } = null;
 
         public string updaterVersion { get; set; } = null;
@@ -462,7 +462,7 @@ namespace Authenty
 
     public class UserInfo
     {
-        public int Level { get; set; } = 1;
+        public int? Level { get; set; } = 1;
         public string Username { get; set; } = null;
         public string Email { get; set; } = null;
         public string ExpireDate { get; set; } = null;
