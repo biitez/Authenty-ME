@@ -1,6 +1,8 @@
 # Authenty-ME
 Top-Tier Licensing Systems for .NET
 
+#### Note: this project is being completely rewritten and will contain new security, new private algorithms and authentication/authorization methods, until then no further updates will be made.
+
 ### FAQ:
 
 1. What programs is this authentication system intended for?
